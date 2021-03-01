@@ -31,6 +31,7 @@ TETRIMINOS = [
         [[0, 1], [1, 0], [1, 1], [2, 0]]] * 2
 ]
 
+REST_RANGE = 20
 
 class Tetris:
     def __init__(self):
@@ -59,7 +60,12 @@ class Tetris:
         if self.rest:
             self.rest_frame_count += 1
 
-        if tetrimino_previous_position == self.tetrimino_position and self.rest_frame_count > 20:
+        if pyxel.btnp(pyxel.KEY_UP):
+            for i in range(20):
+                self.move_tetrimino(True)
+            self.rest_frame_count = REST_RANGE
+
+        if tetrimino_previous_position == self.tetrimino_position and self.rest_frame_count > REST_RANGE:
             self.save_board()
             self.rest = False
             self.rest_frame_count = 0
