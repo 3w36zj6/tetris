@@ -42,7 +42,7 @@ class Tetris:
         pyxel.run(self.update, self.draw)
 
     def setup(self):
-        self.tetrimino_next_type = np.random.randint(7)
+        self.tetrimino_next_type = (0, 2, 3, 4)[np.random.randint(4)]
 
         self.rest = False
         self.rest_frame_count = 0
@@ -177,7 +177,10 @@ class Tetris:
 
     def add_tetrimino(self):
         self.tetrimino_type = self.tetrimino_next_type
-        self.tetrimino_next_type = np.random.randint(7)
+        while True:
+            self.tetrimino_next_type = np.random.randint(7)
+            if self.tetrimino_type != self.tetrimino_next_type:
+                break
         self.tetrimino_position = [0, BOARD_SIZE[1] // 2 - 1]
         self.tetrimino_rotation = 0
 
