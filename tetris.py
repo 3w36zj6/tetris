@@ -82,6 +82,9 @@ class Tetris:
         if pyxel.btnp(pyxel.KEY_Q):  # or not self.check_gameover():
             pyxel.quit()
 
+        if pyxel.btnp(pyxel.KEY_R):
+            self.setup()
+
     def draw(self):
         pyxel.cls(6)
         pyxel.bltm(x=0, y=0, tm=0, u=0, v=0, w=16, h=21, colkey=2)
