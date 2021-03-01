@@ -33,6 +33,7 @@ TETRIMINOS = [
 
 REST_RANGE = 20
 
+
 class Tetris:
     def __init__(self):
         pyxel.init(180, 160, fps=30, caption="Tetris")
@@ -59,6 +60,13 @@ class Tetris:
 
         if self.rest:
             self.rest_frame_count += 1
+
+            for tetrimino in TETRIMINOS[self.tetrimino_type][self.tetrimino_rotation]:
+                if tetrimino[0] + self.tetrimino_position[0] + 1 >= BOARD_SIZE[0] or self.board[tetrimino[0]+self.tetrimino_position[0] + 1, tetrimino[1]+self.tetrimino_position[1]] != 0:
+                    break
+            else:
+                self.rest = False
+                self.rest_frame_count = 0
 
         if pyxel.btnp(pyxel.KEY_UP):
             for i in range(20):
@@ -134,13 +142,13 @@ class Tetris:
                 self.tetrimino_next_position = [
                     self.tetrimino_position[0], self.tetrimino_position[1]+1]
             # rotate right
-            if pyxel.btnp(pyxel.KEY_R):
+            if pyxel.btnp(pyxel.KEY_SPACE):
                 self.tetrimino_next_position = [
                     self.tetrimino_position[0], self.tetrimino_position[1]]
                 self.tetrimino_next_rotation = (
                     self.tetrimino_rotation + 1) % 4
             # rotate left
-            elif pyxel.btnp(pyxel.KEY_L):
+            elif pyxel.btnp(pyxel.KEY_SHIFT):
                 self.tetrimino_next_position = [
                     self.tetrimino_position[0], self.tetrimino_position[1]]
                 self.tetrimino_next_rotation = (
