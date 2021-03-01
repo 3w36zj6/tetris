@@ -1,7 +1,7 @@
 import numpy as np
 import pyxel
 
-BOARD_SIZE = (20, 10)
+BOARD_SIZE = (18, 10)
 TETRIMINOS = [
     # I
     [[[1, i] for i in range(4)],
@@ -36,17 +36,20 @@ REST_RANGE = 20
 
 class Tetris:
     def __init__(self):
-        pyxel.init(180, 160, fps=30, caption="Tetris")
+        pyxel.init(160, 144, fps=30, caption="Tetris")
         pyxel.load("assets/tetris.pyxres")
         self.setup()
         pyxel.run(self.update, self.draw)
 
     def setup(self):
-        self.init_board()
-        self.add_tetrimino()
+        self.tetrimino_next_type = np.random.randint(7)
 
         self.rest = False
         self.rest_frame_count = 0
+        self.clear_line_count = 0
+
+        self.init_board()
+        self.add_tetrimino()
 
     def init_board(self):
         self.board = np.zeros(BOARD_SIZE, dtype=np.int)
@@ -87,7 +90,7 @@ class Tetris:
 
     def draw(self):
         pyxel.cls(6)
-        pyxel.bltm(x=0, y=0, tm=0, u=0, v=0, w=16, h=21, colkey=2)
+        pyxel.bltm(x=0, y=0, tm=0, u=0, v=0, w=21, h=21, colkey=2)
 
         for i in range(BOARD_SIZE[0]):
             for j in range(BOARD_SIZE[1]):
@@ -98,10 +101,15 @@ class Tetris:
                     pyxel.blt(x=16 + 8 * j, y=8 * i, img=0, u=0, v=8 *
                               (self.get_element(i, j) - 1), w=8, h=8, colkey=2)
 
-        pyxel.text(120, 40, f"{pyxel.frame_count} {self.rest_frame_count}", 0)
+        # Next
+        for tetrimino in TETRIMINOS[self.tetrimino_next_type][0]:
+            pyxel.blt(x=120 + 8 * tetrimino[1], y=20 + 8 * tetrimino[0], img=0, u=0, v=8 * self.tetrimino_next_type, w=8, h=8, colkey=2)
+
+
+        pyxel.text(120, 48, f"{self.clear_line_count}", 7)
 
         if self.check_gameover():
-            pyxel.text(120, 32, "GAME OVER", 0)
+            pyxel.text(x=120, y=40, s="GAME OVER", col=7)
 
     def check_gameover(self):
         mid = BOARD_SIZE[1] // 2
@@ -120,6 +128,7 @@ class Tetris:
                 # 消した列より上を下に移動
                 for j in reversed(range(i)):
                     self.board[j + 1] = self.board[j]
+                self.clear_line_count += 1
 
     def get_element(self, i, j):
         for tetrimino in TETRIMINOS[self.tetrimino_type][self.tetrimino_rotation]:
@@ -167,7 +176,8 @@ class Tetris:
         self.tetrimino_rotation = self.tetrimino_next_rotation
 
     def add_tetrimino(self):
-        self.tetrimino_type = np.random.randint(7)  # 0-6
+        self.tetrimino_type = self.tetrimino_next_type
+        self.tetrimino_next_type = np.random.randint(7)
         self.tetrimino_position = [0, BOARD_SIZE[1] // 2 - 1]
         self.tetrimino_rotation = 0
 
