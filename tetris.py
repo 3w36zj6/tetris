@@ -33,10 +33,9 @@ TETRIMINOS = [
 
 REST_RANGE = 20
 
-
 class Tetris:
     def __init__(self):
-        pyxel.init(160, 144, fps=30, caption="Tetris")
+        pyxel.init(160, 144, fps=30, title="Tetris")
         pyxel.load("assets/tetris.pyxres")
         self.setup()
         pyxel.run(self.update, self.draw)
@@ -52,7 +51,8 @@ class Tetris:
         self.add_tetrimino()
 
     def init_board(self):
-        self.board = np.zeros(BOARD_SIZE, dtype=np.int)
+        #self.board = np.zeros(BOARD_SIZE, dtype=np.int)
+        self.board = np.zeros(BOARD_SIZE, dtype=np.int32)
 
     def update(self):
         tetrimino_previous_position = self.tetrimino_position.copy()
@@ -90,8 +90,9 @@ class Tetris:
 
     def draw(self):
         pyxel.cls(6)
-        pyxel.bltm(x=0, y=0, tm=0, u=0, v=0, w=21, h=21, colkey=2)
-
+        #pyxel.bltm(x=0, y=0, tm=0, u=0, v=0, w=21, h=21, colkey=2)
+        pyxel.bltm(0, 0, 0, 0, 0, 21*8, 21*8, 2)
+        
         for i in range(BOARD_SIZE[0]):
             for j in range(BOARD_SIZE[1]):
                 if self.get_element(i, j) == None:
@@ -147,10 +148,12 @@ class Tetris:
                 self.tetrimino_position[0] + 1, self.tetrimino_position[1]]
             self.tetrimino_next_rotation = self.tetrimino_rotation
         else:
-            if pyxel.btnp(pyxel.KEY_LEFT) or pyxel.btnp(pyxel.KEY_LEFT, hold=10, period=1):
+            #if pyxel.btnp(pyxel.KEY_LEFT) or pyxel.btnp(pyxel.KEY_LEFT, hold=10, period=1):
+            if pyxel.btnp(pyxel.KEY_LEFT) or pyxel.btnp(pyxel.KEY_LEFT, hold=10, repeat=1):
                 self.tetrimino_next_position = [
                     self.tetrimino_position[0], self.tetrimino_position[1]-1]
-            elif pyxel.btnp(pyxel.KEY_RIGHT) or pyxel.btnp(pyxel.KEY_RIGHT, hold=10, period=1):
+            #elif pyxel.btnp(pyxel.KEY_RIGHT) or pyxel.btnp(pyxel.KEY_RIGHT, hold=10, period=1):
+            elif pyxel.btnp(pyxel.KEY_RIGHT) or pyxel.btnp(pyxel.KEY_RIGHT, hold=10, repeat=1):
                 self.tetrimino_next_position = [
                     self.tetrimino_position[0], self.tetrimino_position[1]+1]
             # rotate right
